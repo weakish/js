@@ -11,5 +11,9 @@
     "target": "ES2017",
     "incremental": true,
     "module": "CommonJS"
+  },
+     "exclude": [
+      "*/dist",
+      "*/node_modules"
+    ]
   }
-}
