@@ -29,13 +29,31 @@ docs/zh-cn/README.md  => http://127.0.0.1:3000/zh-cn/
 docs/zh-cn/guide.md   => http://127.0.0.1:3000/zh-cn/guide/
 ```
 
-### Compile `index.js` from Source
+## Develop
 
-Dependencies:
+### Dependencies
 
 - Node.js (tested on v10 & v12)
 - [ncc](https://github.com/zeit/ncc/)
 - GNU make or BSD make
+- TypeScript (tested on 3.7) and ESLint
+- vscode or any other IDEs/editors supporting ESLint and TypeScript with JSDoc commented types
+
+### Coding
+
+- Run `npm ci` to install dependencies.
+  
+- Run `npm i -D package-name` to add new dependencies.
+  (Always use `-D` since ncc will package every runtime dependencies,
+  thus there is no need to distinguish dependencies and devDependencies.)
+
+- Run `node index.js` to see results.
+
+- Currently this project has no tests.
+  Pull requests are welcome.
+  Please add the command to run tests in Makefile.
+
+### Compile `index.js` from Source
 
 ```sh
 git clone https://github.com/weakish/js.git
