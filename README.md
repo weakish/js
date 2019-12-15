@@ -1,4 +1,4 @@
-# My Monorepo Experimenting with Git and JavaScript
+# My Monorepo Experiment with Git and JavaScript
 
 Just my personal choices:
 
