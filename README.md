@@ -1,4 +1,4 @@
-# My Personal JavaScript Project Boilerplate
+# My Monorepo Experimenting with Git and JavaScript
 
 Just my personal choices:
 
