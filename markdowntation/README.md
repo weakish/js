@@ -8,7 +8,7 @@ Inspired by [GitHub Pages] and [docsify].
 
 ## Features
 
-- Simple and lightweight (FIXME sloc, FIXME ncc size).
+- Simple (97 CLOC) and lightweight (1380kB compiled as a single file).
 - No statically built html files.
 - No JavaScript at client side.
 - Zero configuration.
