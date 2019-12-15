@@ -1,4 +1,5 @@
 dist/index.js: index.js
+	@npm ci
 	ncc build index.js --minify
 
 cloc:
