@@ -26,7 +26,7 @@ Suppose you run `node index.js` under `docs` directory, then:
 docs/README.md        => http://127.0.0.1:3000
 docs/guide.md         => http://127.0.0.1:3000/guide/
 docs/zh-cn/README.md  => http://127.0.0.1:3000/zh-cn/
-docs/zh-cn/guide.md   => http://domain.com/zh-cn/guide/
+docs/zh-cn/guide.md   => http://127.0.0.1:3000/zh-cn/guide/
 ```
 
 ### Compile `index.js` from Source
