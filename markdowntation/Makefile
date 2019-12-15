@@ -1,5 +1,5 @@
 dist/index.js: index.js
-	@npm ci
+	@cat package-lock.json | jq '.dependencies[].resolved' | xargs npm i --no-package-lock
 	ncc build index.js --minify
 
 cloc:
