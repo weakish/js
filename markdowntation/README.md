@@ -38,7 +38,11 @@ docs/zh-cn/guide.md   => http://127.0.0.1:3000/zh-cn/guide/
 - [ncc](https://github.com/zeit/ncc/)
 - GNU make or BSD make
 - TypeScript (tested on 3.7) and ESLint
+- [Prettier] and [lefthook]
 - vscode or any other IDEs/editors supporting ESLint and TypeScript with JSDoc commented types
+
+[Prettier]: https://prettier.io
+[lefthook]: https://github.com/Arkweid/lefthook/blob/master/docs/node.md
 
 ### Coding
 
