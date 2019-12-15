@@ -33,6 +33,7 @@ docs/zh-cn/guide.md   => http://127.0.0.1:3000/zh-cn/guide/
 
 ### Dependencies
 
+- git
 - Node.js (tested on v10 & v12)
 - [ncc](https://github.com/zeit/ncc/)
 - GNU make or BSD make
@@ -41,7 +42,11 @@ docs/zh-cn/guide.md   => http://127.0.0.1:3000/zh-cn/guide/
 
 ### Coding
 
-- Run `npm ci` to install dependencies.
+```sh
+git clone https://github.com/weakish/js.git
+cd js/markdowntation
+make # install dependencies and package single file
+```
   
 - Run `npm i -D package-name` to add new dependencies.
   (Always use `-D` since ncc will package every runtime dependencies,
@@ -52,11 +57,3 @@ docs/zh-cn/guide.md   => http://127.0.0.1:3000/zh-cn/guide/
 - Currently this project has no tests.
   Pull requests are welcome.
   Please add the command to run tests in Makefile.
-
-### Compile `index.js` from Source
-
-```sh
-git clone https://github.com/weakish/js.git
-cd js/markdowntation
-make
-```
