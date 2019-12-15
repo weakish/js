@@ -11,3 +11,11 @@ Just my personal choices:
 [eslint]: https://mmap.page/dive-into/eslint/ "An Optioned Guide to ESLint"
 [0BSD]: https://landley.net/toybox/license.html "Why 0BSD?"
 [no pagkage.json]: https://deno.land/std/manual.md "Comparison to Node.js"
+
+## Usage
+
+Just clone this repository:
+
+```sh
+git clone https://github.com/weakish/js-boilerplate.git your-project-name
+```
