@@ -1,0 +1,15 @@
+{
+  "parserOptions": {
+        "ecmaVersion": 2017, // FireFox 52 ESR & iPhone 5C
+        "sourceType": "module" // otherwise eslint does not recognize `require`
+  },
+  "rules": {
+    "eqeqeq": "error", // prefer `===` instead of `==`
+    "prefer-arrow-callback": "error", // avoid the evil `this`
+    "curly": "error", // not omit braces for statements in control flow
+    "no-multi-assign": "error", // no `a = b = c = 1`
+    "no-var": "error", // use `const` and `let` instead of `var`
+    "prefer-const": "error", // use `const` when there is no reassignment
+    "no-param-reassign": "error" // use nonreassignable function parameters
+  }
+}
