@@ -218,21 +218,31 @@ const hasFileOrDirectory = (fileOrDirectoryPath, fileOrDirectory) => {
   }
 };
 
-/** @type{function(): boolean} */
+/** @type {function(): boolean} */
 const hasLoomRepo = () =>
   hasFileOrDirectory(newPath(repo + "/.git"), "directory");
+
+/** @typedef {Opaque<'git-remote', string>} GitRemote */
+/** @type {function(string): GitRemote} */
+const newGitRemote = url => /** @type {GitRemote} */ (url);
+
+// Assume current username is same as github user name.
+/** @type {GitRemote} */
+const remoteRepo = newGitRemote(
+  `git@github.com:${os.userInfo().username}/loom.git`
+);
 
 /** @type {<T>(things: Array<T | null>) => Array<T>} */
 const filterOutNull = things => things.filter(thing => thing !== null);
 
 void (async () => {
   try {
-    process.chdir(makeDir.sync(repo));
     /** @typedef { import("simple-git/promise").SimpleGit } Git */
     /** @type {Git} */
     const git = simpleGit(repo);
     if (!hasLoomRepo()) {
-      await git.init();
+      await git.clone(remoteRepo, repo);
+      process.chdir(repo);
     }
     /** @type {EncryptKey} */
     const encryptKey = await genEncryptKey();
@@ -244,7 +254,7 @@ void (async () => {
     );
     await git.add(destPaths);
     await git.commit(`:new: ${new Date().toISOString()}`);
-    // git push
+    await git.push(remoteRepo, "master");
   } catch (error) {
     console.error(error);
     process.exit(1);
