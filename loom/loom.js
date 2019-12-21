@@ -81,11 +81,14 @@ const repeatedPassphrase = {
 
 /** @type {function(string): [EncryptKey, VerifyKey]} */
 const genKeyFromPass = pass => {
+  /** @type {string} */
   const sha256Hex = crypto
     .createHash("sha256")
     .update(pass)
     .digest("hex");
+  /** @type {EncryptKey} */
   const encryptKey = newEncryptKey(sha256Hex.substring(0, 32));
+  /** @type {VerifyKey} */
   const verifyKey = newVerifyKey(sha256Hex.substring(56, 64));
   return [encryptKey, verifyKey];
 };
@@ -93,9 +96,11 @@ const genKeyFromPass = pass => {
 /** @type {function(): Promise<EncryptKey>} */
 const genEncryptKey = async () => {
   if (hasVerifyKey()) {
-    /** @type{prompts.Answers<"passphrase">} */
+    /** @type {prompts.Answers<"passphrase">} */
     const response = await prompts(passphrase);
+    /** @type {[EncryptKey, VerifyKey]} */
     const [encryptKey, verifyKey] = genKeyFromPass(response.passphrase);
+    /** @type {VerifyKey} */
     const existingVerifyKey = readVerifyKey();
     if (verifyKey === existingVerifyKey) {
       return encryptKey;
@@ -109,6 +114,7 @@ const genEncryptKey = async () => {
     /** @type {prompts.Answers<"passphrase" | "repeatedPassphrase">} */
     const response = await prompts([passphrase, repeatedPassphrase]);
     if (response.passphrase === response.repeatedPassphrase) {
+      /** @type {[EncryptKey, VerifyKey]} */
       const [encryptKey, verifyKey] = genKeyFromPass(response.passphrase);
       saveVerifyKey(verifyKey);
       return encryptKey;
@@ -121,12 +127,16 @@ const genEncryptKey = async () => {
 
 /** @type {function(SourceFile, Path, EncryptKey): Path?} */
 const cpSourceFile = (sourceFile, destDir, key) => {
+  /** @type {Path} */
   const sourcePath = sourceFile.filePath;
   if (sourcePath.startsWith(os.homedir())) {
+    /** @type {Path} */
     const relativeSourcePath = newPath(path.relative(os.homedir(), sourcePath));
+    /** @type {Path} */
     const dest = newPath(path.join(destDir, relativeSourcePath));
     makeDir.sync(path.dirname(dest));
     if (sourceFile.needEncryption) {
+      /** @type {Encryptor} */
       const encryptor = new Encryptor({ key });
       /** @type {string} */
       const encryptedData = encryptor.encryptFile(sourcePath);
@@ -161,7 +171,9 @@ const firefoxLockwise = () => {
   /** @type{string[]} */
   const key4Candidates = globby.sync(`${dotFirefox}/*.default/key4.db`);
 
+  /** @type {Path?} */
   const logins = pickOnePath(loginsCandidates);
+  /** @type {Path?} */
   const key4 = pickOnePath(key4Candidates);
   if (logins === null) {
     if (key4 === null) {
@@ -216,11 +228,15 @@ const filterOutNull = things => things.filter(thing => thing !== null);
 void (async () => {
   try {
     process.chdir(makeDir.sync(repo));
+    /** @typedef { import("simple-git/promise").SimpleGit } Git */
+    /** @type {Git} */
     const git = simpleGit(repo);
     if (!hasLoomRepo()) {
       await git.init();
     }
+    /** @type {EncryptKey} */
     const encryptKey = await genEncryptKey();
+    /** @type {Path[]} */
     const destPaths = filterOutNull(
       firefoxLockwise().map(sourceFile =>
         cpSourceFile(sourceFile, repo, encryptKey)
