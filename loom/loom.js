@@ -239,11 +239,12 @@ void (async () => {
   try {
     /** @typedef { import("simple-git/promise").SimpleGit } Git */
     /** @type {Git} */
-    const git = simpleGit(repo);
+    const git = simpleGit();
     if (!hasLoomRepo()) {
       await git.clone(remoteRepo, repo);
-      process.chdir(repo);
     }
+    process.chdir(makeDir.sync(repo));
+    git.cwd(repo);
     /** @type {EncryptKey} */
     const encryptKey = await genEncryptKey();
     /** @type {Path[]} */
