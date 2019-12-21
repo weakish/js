@@ -243,7 +243,9 @@ const filterOutNull = things => things.filter(thing => thing !== null);
 /** @type {{(): void; (code: 0): void; (code: 1, msg: string): void}} */
 const usage = (
   /** @type {0 | 1} */ exitCode = 0,
-  /** @type {string | undefined} */ errorMessage = undefined
+  /** @type {string | undefined} */ errorMessage = exitCode === 0
+    ? undefined
+    : "the command was used incorrectly"
 ) => {
   switch (exitCode) {
     case 0: {
