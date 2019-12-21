@@ -232,6 +232,11 @@ const remoteRepo = newGitRemote(
   `git@github.com:${os.userInfo().username}/loom.git`
 );
 
+/** @type {function(string): void} */
+const gitIgnore = ignorePattern => {
+  fs.writeFileSync(path.join(repo, ".gitignore"), ignorePattern, "utf-8");
+};
+
 /** @type {<T>(things: Array<T | null>) => Array<T>} */
 const filterOutNull = things => things.filter(thing => thing !== null);
 
@@ -242,9 +247,13 @@ void (async () => {
     const git = simpleGit();
     if (!hasLoomRepo()) {
       await git.clone(remoteRepo, repo);
+      gitIgnore(".loom-verify.key");
+      process.chdir(repo);
+      await git.cwd(repo);
+      await git.add(".gitignore");
     }
-    process.chdir(makeDir.sync(repo));
-    git.cwd(repo);
+    process.chdir(repo);
+    await git.cwd(repo);
     /** @type {EncryptKey} */
     const encryptKey = await genEncryptKey();
     /** @type {Path[]} */
@@ -254,7 +263,6 @@ void (async () => {
       )
     );
     await git.add(destPaths);
-    await git.add(".loom-verify.key");
     await git.commit(`:new: ${new Date().toISOString()}`);
     await git.push(remoteRepo, "master");
   } catch (error) {
