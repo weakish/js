@@ -240,8 +240,8 @@ const gitIgnore = ignorePattern => {
 /** @type {<T>(things: Array<T | null>) => Array<T>} */
 const filterOutNull = things => things.filter(thing => thing !== null);
 
-/** @type {(exitCode?: 0 | 1, errorMessage?: string) => void} */
-const usage = (exitCode = 0, errorMessage) => {
+/** @type {import('./usage').Usage} */
+const usage = (exitCode, errorMessage) => {
   switch (exitCode) {
     case 0: {
       console.log("usage: loom");
@@ -292,7 +292,7 @@ void (async () => {
     /** @type {string} */
     const arg = args[0];
     if (["help", "--help", "-help", "-h"].includes(arg)) {
-      usage();
+      usage(0, null);
     } else {
       usage(1, `unknown argument: ${arg}`);
     }
