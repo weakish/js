@@ -7,7 +7,7 @@ pre-commit:
     typecheck:
       run: 'tsc -p .'
     eslint:
-      glob: "*.{js,ts}"
+      glob: "*.js"
       run: eslint {staged_files} --fix
     prettier:
       glob: "*.{js,ts}"
