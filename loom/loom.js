@@ -165,7 +165,7 @@ const hasFileOrDirectory = (fileOrDirectoryPath, fileOrDirectory) => {
         if (f.isFile()) {
           return true;
         } else {
-          console.error(`${repo} must be a file!`);
+          console.error(`${fileOrDirectoryPath} must be a file!`);
           return process.exit(1);
         }
       }
@@ -173,7 +173,7 @@ const hasFileOrDirectory = (fileOrDirectoryPath, fileOrDirectory) => {
         if (f.isDirectory()) {
           return true;
         } else {
-          console.error(`${repo} must be a directory!`);
+          console.error(`${fileOrDirectoryPath} must be a directory!`);
           return process.exit(1);
         }
       }
