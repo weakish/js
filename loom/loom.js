@@ -240,10 +240,10 @@ const gitIgnore = ignorePattern => {
 /** @type {<T>(things: Array<T | null>) => Array<T>} */
 const filterOutNull = things => things.filter(thing => thing !== null);
 
-/** @type {{(code: 0, msg: null): void; (code: 1, msg: string): void}} */
+/** @type {{(): void; (code: 0): void; (code: 1, msg: string): void}} */
 const usage = (
-  /** @type {0 | 1} */ exitCode,
-  /** @type { null | string } */ errorMessage
+  /** @type {0 | 1} */ exitCode = 0,
+  /** @type {string | undefined} */ errorMessage = undefined
 ) => {
   switch (exitCode) {
     case 0: {
@@ -295,7 +295,7 @@ void (async () => {
     /** @type {string} */
     const arg = args[0];
     if (["help", "--help", "-help", "-h"].includes(arg)) {
-      usage(0, null);
+      usage();
     } else {
       usage(1, `unknown argument: ${arg}`);
     }
