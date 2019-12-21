@@ -240,33 +240,63 @@ const gitIgnore = ignorePattern => {
 /** @type {<T>(things: Array<T | null>) => Array<T>} */
 const filterOutNull = things => things.filter(thing => thing !== null);
 
+/** @type {(exitCode?: 0 | 1, errorMessage?: string) => void} */
+const usage = (exitCode = 0, errorMessage) => {
+  switch (exitCode) {
+    case 0: {
+      console.log("usage: loom");
+      return process.exit(0);
+    }
+    case 1: {
+      console.log(errorMessage);
+      console.log("usage: loom");
+      return process.exit(1);
+    }
+  }
+};
+
 void (async () => {
-  try {
-    /** @typedef { import("simple-git/promise").SimpleGit } Git */
-    /** @type {Git} */
-    const git = simpleGit();
-    if (!hasLoomRepo()) {
-      await git.clone(remoteRepo, repo);
-      gitIgnore(".loom-verify.key");
+  /** @type {string[]} */
+  const args = process.argv.slice(2);
+  if (args.length === 0) {
+    try {
+      /** @typedef { import("simple-git/promise").SimpleGit } Git */
+      /** @type {Git} */
+      const git = simpleGit();
+      if (!hasLoomRepo()) {
+        await git.clone(remoteRepo, repo);
+        gitIgnore(".loom-verify.key");
+        process.chdir(repo);
+        await git.cwd(repo);
+        await git.add(".gitignore");
+      }
       process.chdir(repo);
       await git.cwd(repo);
-      await git.add(".gitignore");
+      /** @type {EncryptKey} */
+      const encryptKey = await genEncryptKey();
+      /** @type {Path[]} */
+      const destPaths = filterOutNull(
+        firefoxLockwise().map(sourceFile =>
+          cpSourceFile(sourceFile, repo, encryptKey)
+        )
+      );
+      await git.add(destPaths);
+      await git.commit(`:new: ${new Date().toISOString()}`);
+      await git.push(remoteRepo, "master");
+      process.exit(0);
+    } catch (error) {
+      console.error(error);
+      process.exit(1);
     }
-    process.chdir(repo);
-    await git.cwd(repo);
-    /** @type {EncryptKey} */
-    const encryptKey = await genEncryptKey();
-    /** @type {Path[]} */
-    const destPaths = filterOutNull(
-      firefoxLockwise().map(sourceFile =>
-        cpSourceFile(sourceFile, repo, encryptKey)
-      )
-    );
-    await git.add(destPaths);
-    await git.commit(`:new: ${new Date().toISOString()}`);
-    await git.push(remoteRepo, "master");
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
+  } else if (args.length === 1) {
+    /** @type {string} */
+    const arg = args[0];
+    if (["help", "--help", "-help", "-h"].includes(arg)) {
+      usage();
+    } else {
+      usage(1, `unknown argument: ${arg}`);
+    }
+  } else {
+    usage(1, "only accept zero or one argument");
   }
 })();
