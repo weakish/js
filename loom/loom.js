@@ -240,8 +240,11 @@ const gitIgnore = ignorePattern => {
 /** @type {<T>(things: Array<T | null>) => Array<T>} */
 const filterOutNull = things => things.filter(thing => thing !== null);
 
-/** @type {import('./usage').Usage} */
-const usage = (exitCode, errorMessage) => {
+/** @type {{(code: 0, msg: null): void; (code: 1, msg: string): void}} */
+const usage = (
+  /** @type {0 | 1} */ exitCode,
+  /** @type { null | string } */ errorMessage
+) => {
   switch (exitCode) {
     case 0: {
       console.log("usage: loom");
