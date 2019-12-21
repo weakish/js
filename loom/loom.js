@@ -254,6 +254,7 @@ void (async () => {
       )
     );
     await git.add(destPaths);
+    await git.add(".loom-verify.key");
     await git.commit(`:new: ${new Date().toISOString()}`);
     await git.push(remoteRepo, "master");
   } catch (error) {
