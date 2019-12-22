@@ -169,7 +169,7 @@ const restoreSourceFile = (sourceFile, repoDir, key, destFilePath) => {
       const decryptedData = decryptor.decryptFile(dest, { toBuffer: true });
       fs.writeFileSync(destFilePath, decryptedData);
     } else {
-      fs.writeFileSync(destFilePath, fs.readFileSync(dest, "utf-8"));
+      fs.copyFileSync(dest, destFilePath);
     }
   } else {
     console.error(
