@@ -165,8 +165,8 @@ const restoreSourceFile = (sourceFile, repoDir, key, destFilePath) => {
     if (sourceFile.needEncryption) {
       /** @type {Decryptor} */
       const decryptor = new Decryptor({ key });
-      /** @type {string} */
-      const decryptedData = decryptor.decryptFile(dest);
+      /** @type {Buffer} */
+      const decryptedData = decryptor.decryptFile(dest, { toBuffer: true });
       fs.writeFileSync(destFilePath, decryptedData);
     } else {
       fs.writeFileSync(destFilePath, fs.readFileSync(dest, "utf-8"));
