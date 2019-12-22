@@ -269,13 +269,13 @@ const filterOutNull = things => things.filter(thing => thing !== null);
 /** @type {(...args: [] | [0] | [1, string]) => void} */
 const usage = (...args) => {
   if (args.length === 0 || args[0] === 0) {
-    console.log("usage: loom\n       loom /path/to/source/file > dest");
+    console.log("usage: loom\n       loom restore /path/to/source/file > dest");
     return process.exit(0);
   } else {
     /** @type {string} */
     const message = args[1];
     console.log(message);
-    console.log("usage: loom\n       loom /path/to/source/file > dest");
+    console.log("usage: loom\n       loom restore /path/to/source/file > dest");
     return process.exit(1);
   }
 };
