@@ -153,23 +153,23 @@ const cpSourceFile = (sourceFile, destDir, key) => {
   }
 };
 
-/** @type {function(SourceFile, Path, EncryptKey): void} */
-const restoreSourceFile = (sourceFile, destDir, key) => {
+/** @type {function(SourceFile, Path, EncryptKey, string): void} */
+const restoreSourceFile = (sourceFile, repoDir, key, destFilePath) => {
   /** @type {Path} */
   const sourcePath = sourceFile.filePath;
   if (sourcePath.startsWith(os.homedir())) {
     /** @type {Path} */
     const relativeSourcePath = newPath(path.relative(os.homedir(), sourcePath));
     /** @type {Path} */
-    const dest = newPath(path.join(destDir, relativeSourcePath));
+    const dest = newPath(path.join(repoDir, relativeSourcePath));
     if (sourceFile.needEncryption) {
       /** @type {Decryptor} */
       const decryptor = new Decryptor({ key });
       /** @type {string} */
       const decryptedData = decryptor.decryptFile(dest);
-      process.stdout.write(decryptedData);
+      fs.writeFileSync(destFilePath, decryptedData);
     } else {
-      process.stdout.write(dest);
+      fs.writeFileSync(destFilePath, fs.readFileSync(dest, "utf-8"));
     }
   } else {
     console.error(
@@ -269,13 +269,13 @@ const filterOutNull = things => things.filter(thing => thing !== null);
 /** @type {(...args: [] | [0] | [1, string]) => void} */
 const usage = (...args) => {
   if (args.length === 0 || args[0] === 0) {
-    console.log("usage: loom\n       loom restore /path/to/source/file > dest");
+    console.log("usage: loom\n       loom restore /path/to/source/file dest");
     return process.exit(0);
   } else {
     /** @type {string} */
     const message = args[1];
     console.log(message);
-    console.log("usage: loom\n       loom restore /path/to/source/file > dest");
+    console.log("usage: loom\n       loom restore /path/to/source/file dest");
     return process.exit(1);
   }
 };
@@ -321,8 +321,11 @@ void (async () => {
     } else if (arg === "restore") {
       /** @type {string | undefined} */
       const restoreFile = args[1];
+      const restoreDest = args[2];
       if (restoreFile === undefined) {
         usage(1, `restore file unspecified`);
+      } else if (restoreDest === undefined) {
+        usage(1, `restore destination unspecified`);
       } else {
         /** @type {EncryptKey} */
         const encryptKey = await genEncryptKey();
@@ -333,7 +336,7 @@ void (async () => {
         if (restoreSource === undefined) {
           usage(1, `unknown file: ${restoreFile}`);
         } else {
-          restoreSourceFile(restoreSource, repo, encryptKey);
+          restoreSourceFile(restoreSource, repo, encryptKey, restoreDest);
         }
       }
     } else {
