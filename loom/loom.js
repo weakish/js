@@ -4,7 +4,7 @@ const path = require("path");
 const os = require("os");
 const process = require("process");
 
-const { Encryptor } = require("strong-cryptor");
+const { Encryptor, Decryptor } = require("strong-cryptor");
 const globby = require("globby");
 const makeDir = require("make-dir");
 const prompts = require("prompts");
@@ -153,6 +153,32 @@ const cpSourceFile = (sourceFile, destDir, key) => {
   }
 };
 
+/** @type {function(SourceFile, Path, EncryptKey): void} */
+const restoreSourceFile = (sourceFile, destDir, key) => {
+  /** @type {Path} */
+  const sourcePath = sourceFile.filePath;
+  if (sourcePath.startsWith(os.homedir())) {
+    /** @type {Path} */
+    const relativeSourcePath = newPath(path.relative(os.homedir(), sourcePath));
+    /** @type {Path} */
+    const dest = newPath(path.join(destDir, relativeSourcePath));
+    if (sourceFile.needEncryption) {
+      /** @type {Decryptor} */
+      const decryptor = new Decryptor({ key });
+      /** @type {string} */
+      const decryptedData = decryptor.decryptFile(dest);
+      process.stdout.write(decryptedData);
+    } else {
+      process.stdout.write(dest);
+    }
+  } else {
+    console.error(
+      `${sourcePath} is not under home directory. Skip restoring this file.`
+    );
+    process.exit(1);
+  }
+};
+
 /** @type {function(string[]): Path?} */
 const pickOnePath = candidates => {
   if (candidates.length === 1) {
@@ -249,12 +275,12 @@ const usage = (
 ) => {
   switch (exitCode) {
     case 0: {
-      console.log("usage: loom");
+      console.log("usage: loom\n       loom /path/to/source/file > dest");
       return process.exit(0);
     }
     case 1: {
       console.log(errorMessage);
-      console.log("usage: loom");
+      console.log("usage: loom\n       loom /path/to/source/file > dest");
       return process.exit(1);
     }
   }
@@ -293,15 +319,31 @@ void (async () => {
       console.error(error);
       process.exit(1);
     }
-  } else if (args.length === 1) {
+  } else {
     /** @type {string} */
     const arg = args[0];
     if (["help", "--help", "-help", "-h"].includes(arg)) {
       usage();
+    } else if (arg === "restore") {
+      /** @type {string | undefined} */
+      const restoreFile = args[1];
+      if (restoreFile === undefined) {
+        usage(1, `restore file unspecified`);
+      } else {
+        /** @type {EncryptKey} */
+        const encryptKey = await genEncryptKey();
+        /** @type {SourceFile | undefined} */
+        const restoreSource = firefoxLockwise().find(
+          ({ filePath }) => filePath === restoreFile
+        );
+        if (restoreSource === undefined) {
+          usage(1, `unknown file: ${restoreFile}`);
+        } else {
+          restoreSourceFile(restoreSource, repo, encryptKey);
+        }
+      }
     } else {
       usage(1, `unknown argument: ${arg}`);
     }
-  } else {
-    usage(1, "only accept zero or one argument");
   }
 })();
