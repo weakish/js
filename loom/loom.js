@@ -266,23 +266,17 @@ const gitIgnore = ignorePattern => {
 /** @type {<T>(things: Array<T | null>) => Array<T>} */
 const filterOutNull = things => things.filter(thing => thing !== null);
 
-/** @type {{(): void; (code: 0): void; (code: 1, msg: string): void}} */
-const usage = (
-  /** @type {0 | 1} */ exitCode = 0,
-  /** @type {string | undefined} */ errorMessage = exitCode === 0
-    ? undefined
-    : "the command was used incorrectly"
-) => {
-  switch (exitCode) {
-    case 0: {
-      console.log("usage: loom\n       loom /path/to/source/file > dest");
-      return process.exit(0);
-    }
-    case 1: {
-      console.log(errorMessage);
-      console.log("usage: loom\n       loom /path/to/source/file > dest");
-      return process.exit(1);
-    }
+/** @type {(...args: [] | [0] | [1, string]) => void} */
+const usage = (...args) => {
+  if (args.length === 0 || args[0] === 0) {
+    console.log("usage: loom\n       loom /path/to/source/file > dest");
+    return process.exit(0);
+  } else {
+    /** @type {string} */
+    const message = args[1];
+    console.log(message);
+    console.log("usage: loom\n       loom /path/to/source/file > dest");
+    return process.exit(1);
   }
 };
 
