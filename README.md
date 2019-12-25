@@ -40,9 +40,7 @@ make install-deps # install dependencies
 make # packaging with ncc
 ```
 
-## markdowntation
-
-# Markdowntation
+## Markdowntation
 
 Serve your documentation with zero-configuration and without client side JavaScript.
 Inspired by [GitHub Pages] and [docsify].
@@ -50,14 +48,14 @@ Inspired by [GitHub Pages] and [docsify].
 [GitHub Pages]: https://pages.github.com/
 [docsify]: https://docsify.js.org/
 
-## Features
+### Features
  Inspired by [GitHub Pages] and [docsify].
 - Simple (97 CLOC) and lightweight (1380kB compiled as a single file).
 - No statically built html files.
 - No JavaScript at client side.
 - Zero configuration.
 
-## Usage
+### Usage
 
 Download the `index.js` file at GitHub releases page, and put it under your documentation directory with markdown files.
 Now just run `node index.js` and you can access your documentation site at http://127.0.0.1:3000
@@ -71,3 +69,4 @@ docs/README.md        => http://127.0.0.1:3000
 docs/guide.md         => http://127.0.0.1:3000/guide/
 docs/zh-cn/README.md  => http://127.0.0.1:3000/zh-cn/
 docs/zh-cn/guide.md   => http://127.0.0.1:3000/zh-cn/guide/
+```
