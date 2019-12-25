@@ -12,8 +12,9 @@
     "incremental": true,
     "module": "CommonJS"
   },
-     "exclude": [
-      "*/dist",
-      "*/node_modules"
-    ]
-  }
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
+}
+  
