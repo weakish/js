@@ -70,9 +70,3 @@ docs/guide.md         => http://127.0.0.1:3000/guide/
 docs/zh-cn/README.md  => http://127.0.0.1:3000/zh-cn/
 docs/zh-cn/guide.md   => http://127.0.0.1:3000/zh-cn/guide/
 ```
-
-## Loom
-
-Backup Firefox Lockwise data files.
-
-Usage: TBD (for now just check source code)
